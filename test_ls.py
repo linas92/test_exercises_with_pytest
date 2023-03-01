@@ -132,3 +132,14 @@ class TestClass(object):
             shutil.rmtree("c\testfolder")
 
 
+    @staticmethod
+    @pytest.mark.xfail(reason="-y parameter does not yet work")
+    def test_uninplemented_feature_should_fail():
+        try:
+            os.mkdir("/tmp/testfolder")
+            Path("/tmp/testfolder/first.txt").touch()
+            result = subprocess.run(["ls", "-y", "/tmp/testfolder"], stdout=subprocess.PIPE)
+            print(f"this is the result [{result}]")
+            assert "first.txt" in str(result.stdout), "Listing a foilder with -y did not return an expected result"
+        finally:
+            shutil.rmtree("/tmp/testfolder")
